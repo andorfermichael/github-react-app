@@ -2,6 +2,7 @@ import createHistory from "history/createBrowserHistory";
 import { extendObservable, computed } from "mobx";
 import React from "react";
 import Issue from "../ui/issue";
+import About from "../ui/about";
 import RepositoryList from "../ui/repositoryList";
 import RouteNotFound from "../ui/routeNotFound";
 import myro from "myro";
@@ -34,7 +35,7 @@ export default class ViewStore {
           case "about": {
             return {
               ...route,
-              component: () => <div>about</div>
+              component: About
             };
           }
           case "repos": {
