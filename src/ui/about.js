@@ -1,60 +1,30 @@
 import React from "react";
 import { observer, inject } from "mobx-react";
-import { PENDING, REJECTED, FULFILLED } from "mobx-utils";
-import { Spinner, Button } from "@blueprintjs/core";
 
-export default inject("aboutStore", "sessionStore")(
+export default inject("sessionStore")(
   observer(
     class About extends React.Component {
-      constructor({ aboutStore, sessionStore }) {
+      constructor({ sessionStore }) {
         super();
-        aboutStore.fetchAbout();
       }
       renderAbout() {
         const {sessionStore, aboutStore} = this.props;
 
         if (sessionStore.authenticated) {
-          const aboutDeferred = aboutStore.aboutDeferred;
-          const state = aboutDeferred.state;
-          switch (state) {
-            case PENDING: {
-              return <Spinner />;
-            }
-            case REJECTED: {
-              return (
-                <div className="pt-non-ideal-state">
-                  <div
-                    className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-                    <span className="pt-icon pt-icon-error" />
-                  </div>
-                  <h4 className="pt-non-ideal-state-title">Error occured</h4>
-                  <div className="pt-non-ideal-state-description">
-                    <Button onClick={aboutStore.fetchAbout} text="retry"/>
-                  </div>
-                </div>
-              );
-            }
-            case FULFILLED: {
-              const about = aboutDeferred.value;
-              console.log(about);
-              return (
-                <div>
-                  <img src={about.avatar_url} width="100" height="100"/>
-                  <p><strong>Username:</strong><a href={about.html_url} target="_blank"> {about.login}</a></p>
-                  <p><strong>Name:</strong> {about.name}</p>
-                  <p><strong>Location:</strong> {about.location}</p>
-                  <p><strong>Follower Count:</strong> {about.followers}</p>
-                  <p><strong>Following Count:</strong> {about.following}</p>
-                  <p><strong>Private Repo Count:</strong> {about.total_private_repos}</p>
-                  <p><strong>Public Repo Count:</strong> {about.public_repos}</p>
-                </div>
-              );
-              break;
-            }
-            default: {
-              console.error("deferred state not supported", state);
-            }
-          }
+          const currentUser = sessionStore.currentUser;
+
+          return (
+            <div>
+              <img src={currentUser.avatar_url} width="100" height="100"/>
+              <p><strong>Username:</strong><a href={currentUser.html_url} target="_blank"> {currentUser.login}</a></p>
+              <p><strong>Name:</strong> {currentUser.name}</p>
+              <p><strong>Location:</strong> {currentUser.location}</p>
+              <p><strong>Follower Count:</strong> {currentUser.followers}</p>
+              <p><strong>Following Count:</strong> {currentUser.following}</p>
+              <p><strong>Private Repo Count:</strong> {currentUser.total_private_repos}</p>
+              <p><strong>Public Repo Count:</strong> {currentUser.public_repos}</p>
+            </div>
+          );
         } else {
           return <h1>NOT AUTHENTICATED </h1>;
         }

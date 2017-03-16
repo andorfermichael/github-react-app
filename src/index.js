@@ -8,7 +8,6 @@ import ViewStore from "./stores/view";
 import GithubApp from "./ui/githubApp";
 import GithubAPI from "./api/github";
 import RepoStore from "./stores/repo";
-import AboutStore from "./stores/about";
 import IssueStore from "./stores/issue";
 import "./index.css";
 
@@ -19,7 +18,6 @@ const githubAPI = new GithubAPI({
 const sessionStore = new SessionStore({ githubAPI });
 const viewStore = new ViewStore();
 const repoStore = new RepoStore({ githubAPI, sessionStore });
-const aboutStore = new AboutStore({ githubAPI, sessionStore });
 const issueStore = new IssueStore({ githubAPI, sessionStore });
 
 // render the whole application
@@ -28,7 +26,7 @@ function renderApp() {
   ReactDOM.render(
     <div>
       <DevTools position={{ bottom: 0, right: 10 }} />
-      <Provider sessionStore={sessionStore} viewStore={viewStore} repoStore={repoStore} issueStore={issueStore} aboutStore={aboutStore}>
+      <Provider sessionStore={sessionStore} viewStore={viewStore} repoStore={repoStore} issueStore={issueStore}>
         <GithubApp />
       </Provider>
     </div>,
