@@ -2,15 +2,15 @@ import React from "react";
 import { observer, inject } from "mobx-react";
 import { PENDING, REJECTED, FULFILLED } from "mobx-utils";
 import { Spinner, Button } from "@blueprintjs/core";
-export default inject("repoStore", "sessionStore")(
+export default inject("repoStore", "sessionStore", "viewStore")(
   observer(
     class RepositoryList extends React.Component {
-      constructor({ repoStore, sessionStore }) {
+      constructor({ repoStore, sessionStore, viewStore }) {
         super();
         repoStore.fetchRepos();
       }
       renderRepoList() {
-        const {sessionStore, repoStore} = this.props;
+        const {sessionStore, repoStore, viewStore} = this.props;
 
         if (sessionStore.authenticated) {
           const repoDeferred = repoStore.repoDeferred;
@@ -43,6 +43,7 @@ export default inject("repoStore", "sessionStore")(
                       <tr>
                         <th>Name</th>
                         <th>Description</th>
+                        <th>Open issue</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -52,6 +53,13 @@ export default inject("repoStore", "sessionStore")(
                           <tr key={entry.id}>
                             <td><a href={entry.html_url}>{entry.name}</a></td>
                             <td>{entry.description}</td>
+                            <td>
+                              <Button
+                                className="pt-button pt-minimal pt-icon-edit"
+                                onClick={() => viewStore.push(viewStore.routes.issue({repo: entry.name}))}
+                                text="issue"
+                              />
+                            </td>
                           </tr>
                       )
                     }
