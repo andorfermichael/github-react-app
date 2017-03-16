@@ -8,7 +8,7 @@ export default inject("sessionStore")(
         super();
       }
       renderAbout() {
-        const {sessionStore, aboutStore} = this.props;
+        const {sessionStore} = this.props;
 
         if (sessionStore.authenticated) {
           const currentUser = sessionStore.currentUser;
