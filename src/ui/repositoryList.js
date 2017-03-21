@@ -23,8 +23,7 @@ export default inject("repoStore", "sessionStore", "viewStore")(
               return (
                 <div className="pt-non-ideal-state">
                   <div
-                    className="pt-non-ideal-state-visual pt-non-ideal-state-icon"
-                  >
+                    className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
                     <span className="pt-icon pt-icon-error" />
                   </div> 
                   <h4 className="pt-non-ideal-state-title">Error occured</h4>
@@ -44,6 +43,7 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                         <th>Name</th>
                         <th>Description</th>
                         <th>Open issue</th>
+                        <th>List issues</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -51,13 +51,20 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                       repos.map(
                         (entry, index) =>
                           <tr key={entry.id}>
-                            <td><a href={entry.html_url}>{entry.name}</a></td>
+                            <td><a href={entry.html_url} target="_blank">{entry.name}</a></td>
                             <td>{entry.description}</td>
                             <td>
                               <Button
                                 className="pt-button pt-minimal pt-icon-edit"
                                 onClick={() => viewStore.push(viewStore.routes.issue({repo: entry.name}))}
                                 text="issue"
+                              />
+                            </td>
+                            <td>
+                              <Button
+                                className="pt-button pt-minimal pt-icon-edit"
+                                onClick={() => viewStore.push(viewStore.routes.issues({repo: entry.name}))}
+                                text="show"
                               />
                             </td>
                           </tr>

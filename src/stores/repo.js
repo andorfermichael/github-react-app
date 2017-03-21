@@ -5,6 +5,7 @@ export default class Repo {
   constructor({ githubAPI, sessionStore }) {
     extendObservable(this, {
       repoDeferred: null,
+      issuesDeferred: null,
       fetchRepos: action("fetchRepos", () => {
         when(
           // condition
@@ -17,6 +18,20 @@ export default class Repo {
             const userDeferred = sessionStore.userDeferred;
             this.repoDeferred = fromPromise(
               githubAPI.userRepositories(userDeferred.value)
+            );
+          }
+        );
+      }),
+      fetchIssues: action("fetchIssues", (repo) => {
+        when(
+          // condition
+          () =>
+          sessionStore.authenticated,
+          // ... then
+          () => {
+            const userDeferred = sessionStore.userDeferred;
+            this.issuesDeferred = fromPromise(
+              githubAPI.repositoryIssues(userDeferred.value.login, repo)
             );
           }
         );

@@ -4,6 +4,7 @@ import React from "react";
 import Issue from "../ui/issue";
 import About from "../ui/about";
 import RepositoryList from "../ui/repositoryList";
+import IssueList from "../ui/issueList";
 import RouteNotFound from "../ui/routeNotFound";
 import myro from "myro";
 
@@ -12,6 +13,7 @@ const history = createHistory();
 const routeDefinitions = {
   "/": "home",
   "/repos": "repos",
+  "/issues/:repo": "issues",
   "/about": "about",
   "/issue/:repo": "issue"
 };
@@ -42,6 +44,12 @@ export default class ViewStore {
             return {
               ...route,
               component: RepositoryList
+            };
+          }
+          case "issues": {
+            return {
+              ...route,
+              component: IssueList
             };
           }
           case "issue": {
