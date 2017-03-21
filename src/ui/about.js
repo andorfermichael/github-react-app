@@ -15,7 +15,7 @@ export default inject("sessionStore")(
 
           return (
             <div>
-              <img src={currentUser.avatar_url} width="100" height="100"/>
+              <img src={currentUser.avatar_url} width="100" height="100" alt={currentUser.name}/>
               <p><strong>Username:</strong><a href={currentUser.html_url} target="_blank"> {currentUser.login}</a></p>
               <p><strong>Name:</strong> {currentUser.name}</p>
               <p><strong>Location:</strong> {currentUser.location}</p>
