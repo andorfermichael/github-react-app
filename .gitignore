@@ -3,6 +3,9 @@
 # ide
 .idea
 
+# config
+github-config.js
+
 # dependencies
 /node_modules
 
