@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-export default observer(function({ form, field, state = "open", mode, handleChange }) {
+export default observer(function({ form, field, state = "open", mode, handleStateChange }) {
   const classes = ["pt-select"];
 
   if (mode === "edit") {
@@ -10,7 +10,7 @@ export default observer(function({ form, field, state = "open", mode, handleChan
         <label className="pt-label " htmlFor={form.$(field).id}>
           {form.$(field).label}
         </label>
-        <select className={classes.join(" ")} {...form.$(field).bind()} value={state} onChange={(e) => handleChange(e)}>
+        <select className={classes.join(" ")} {...form.$(field).bind()} value={state} onChange={(e) => handleStateChange(e)}>
           {
             form.$(field).value.options.map(
               val =>

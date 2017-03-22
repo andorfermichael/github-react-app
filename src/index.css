@@ -1,5 +1,10 @@
 @import "~normalize.css";
 @import "~@blueprintjs/core/dist/blueprint.css";
+@import '~font-awesome/css/font-awesome.css';
+@import '~react-mde/lib/styles/react-mde.css';
+@import '~react-mde/lib/styles/react-mde-command-styles.css';
+@import '~react-mde/lib/styles/markdown-default-theme.css';
+
 
 .app {
     width: 100vw;

@@ -13,7 +13,7 @@ export default observer(function({ form, field }) {
       <label className="pt-label " htmlFor={form.$(field).id}>
         {form.$(field).label}
       </label>
-      <input className={classes.join(" ")} {...form.$(field).bind()} />
+      <input className={classes.join(" ")} {...form.$(field).bind()}/>
       <p>{form.$(field).error}</p>
     </div>
   );

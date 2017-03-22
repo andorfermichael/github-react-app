@@ -8,6 +8,7 @@ import validatorjs from "validatorjs";
 import FormInput from './formInput';
 import FormSelect from './formSelect';
 import FormTextarea from './formTextarea';
+import { ReactMde, ReactMdeCommands } from 'react-mde';
 
 const plugins = { dvr: validatorjs };
 
@@ -23,10 +24,11 @@ const fields = [
     rules: "required|string|between:5,10"
   },
   {
+    name: "markdown",
+    label: "Text"
+  },
+  {
     name: "text",
-    label: "Text",
-    placeholder: "Issue Description",
-    rules: "required|string|between:5,25"
   },
   {
     name: "state",
@@ -79,14 +81,20 @@ class IssueForm extends MobxReactForm {
 }
 
 const FormComponent = inject("form")(
-  observer(function({ form, issueobject, handleChange, selectValue }) {
+  observer(function({ form, issueobject, refCallback, handleStateChange, handleMarkdownChange, selectValue, mdeValue }) {
+    let commands = ReactMdeCommands.getDefaultCommands();
+    mdeValue.text = issueobject.body;
+
     return (
       <form onSubmit={form.onSubmit}>
 
         <FormInput form={form} field="title" />
-        <FormTextarea form={form} field="text" />
-
-        <FormSelect form={form} field="state" state={selectValue} mode={issueobject.mode} handleChange={handleChange}/>
+        <div>
+          <label htmlFor={form.$("markdown").id}>{form.$("markdown").label}</label>
+          <ReactMde textareaId="markdown" textareaName="markdown" field="markdown" value={mdeValue} onChange={handleMarkdownChange} commands={commands}/>
+        </div>
+        <FormTextarea form={form} field="text" text={issueobject} refCallback={refCallback} hidden={true}/>
+        <FormSelect form={form} field="state" state={selectValue} mode={issueobject.mode} handleStateChange={handleStateChange}/>
 
         {form.issuePostDeferred.case({
           pending: () => <Button type="submit" loading={true} text="submit" />,
@@ -127,11 +135,31 @@ export default inject("issueStore")(
 
         this.state = {
           form: new IssueForm({ fields, values }, { plugins, issueobject }, issueStore),
-          issueobject: issueobject
+          issueobject: issueobject,
+          mdeValue: {text: "", selection: null}
         };
       }
 
-      handleChange = (e) => {
+      handleMarkdownChange = (value) => {
+        let issueobject = this.state.issueobject;
+        issueobject.body = value.text;
+
+        // Simulate input on hidden field
+        const event = new Event('input', {
+          'bubbles': true,
+          'cancelable': true
+        });
+
+        this._input.value = issueobject.body;
+        this._input.dispatchEvent(event);
+
+        this.setState({
+          mdeValue: value,
+          issueobject: issueobject
+        });
+      };
+
+      handleStateChange = (e) => {
         let issueobject = this.state.issueobject;
         issueobject.state = e.target.value;
 
@@ -143,6 +171,11 @@ export default inject("issueStore")(
       render() {
         const { form } = this.state;
         const {route} = this.props;
+
+        const self = this;
+        function refCallback(e) {
+          self._input = e;
+        }
 
         const issueobject = route.props.issueobject;
 
@@ -157,7 +190,7 @@ export default inject("issueStore")(
           <Provider form={form}>
             <div>
             <h3>{headline}</h3>
-            <FormComponent issueobject={issueobject} handleChange={this.handleChange} selectValue={this.state.issueobject.state}/>
+            <FormComponent issueobject={issueobject} refCallback={refCallback} handleStateChange={this.handleStateChange} handleMarkdownChange={this.handleMarkdownChange} selectValue={this.state.issueobject.state} mdeValue={this.state.mdeValue}/>
             </div>
           </Provider>
         );
