@@ -25,10 +25,9 @@ const fields = [
 ];
 
 class IssueForm extends MobxReactForm {
-  constructor(fields, options, issueStore, repo) {
+  constructor(fields, options, issueStore) {
     super(fields, options);
     this.issueStore = issueStore;
-    this.repo = repo;
 
     extendObservable(this, {
       issuePostDeferred: fromPromise(Promise.resolve())
@@ -83,18 +82,41 @@ export default inject("issueStore")(
     class IssueFormComponent extends React.Component {
       constructor({ issueStore, route }) {
         super();
+
+        const issueobject = route.props.issueobject;
+
+        let values = {
+          title: "",
+          text: ""
+        };
+        if (issueobject.mode === "edit") {
+          values = {
+            title: issueobject.title,
+            text: issueobject.description
+          };
+        }
+
         this.state = {
-          form: new IssueForm({ fields }, { plugins }, issueStore, route.params.repo)
+          form: new IssueForm({ fields, values }, { plugins }, issueStore),
         };
       }
       render() {
         const { form } = this.state;
         const {route} = this.props;
 
+        const issueobject = route.props.issueobject;
+
+        let headline = "";
+        if (issueobject.mode === "open") {
+          headline = `Open issue for repository ${issueobject.repo}`;
+        } else if (issueobject.mode === "edit") {
+          headline = `Edit issue #${issueobject.number} of repository ${issueobject.repo}`;
+        }
+
         return (
           <Provider form={form}>
             <div>
-            <h3>issue for {route.params.repo}</h3>
+            <h3>{headline}</h3>
             <FormComponent />
             </div>
           </Provider>

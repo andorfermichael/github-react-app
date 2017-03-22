@@ -2,6 +2,7 @@ import React from "react";
 import { observer, inject } from "mobx-react";
 import { PENDING, REJECTED, FULFILLED } from "mobx-utils";
 import { Spinner, Button } from "@blueprintjs/core";
+import {issueObject} from "../ui/issue-object";
 export default inject("repoStore", "sessionStore", "viewStore")(
   observer(
     class RepositoryList extends React.Component {
@@ -43,7 +44,7 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                         <th>Name</th>
                         <th>Description</th>
                         <th>Open issue</th>
-                        <th>List issues</th>
+                        <th>Issues list</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -56,8 +57,8 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                             <td>
                               <Button
                                 className="pt-button pt-minimal pt-icon-edit"
-                                onClick={() => viewStore.push(viewStore.routes.issue({repo: entry.name}))}
-                                text="issue"
+                                onClick={() => {issueObject.mode="open"; issueObject.repo=entry.name; issueObject.number=""; issueObject.title=""; issueObject.description=""; viewStore.push(viewStore.routes.issue())}}
+                                text="open"
                               />
                             </td>
                             <td>

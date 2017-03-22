@@ -6,6 +6,7 @@ import About from "../ui/about";
 import RepositoryList from "../ui/repositoryList";
 import IssueList from "../ui/issueList";
 import RouteNotFound from "../ui/routeNotFound";
+import {issueObject} from "../ui/issue-object";
 import myro from "myro";
 
 const history = createHistory();
@@ -15,7 +16,12 @@ const routeDefinitions = {
   "/repos": "repos",
   "/issues/:repo": "issues",
   "/about": "about",
-  "/issue/:repo": "issue"
+  "/issue": {
+    name: 'issue',
+    props: {
+      issueobject: issueObject
+    }
+  }
 };
 
 const routes = myro(routeDefinitions);
@@ -33,6 +39,7 @@ export default class ViewStore {
       push: url => history.push(url),
       currentView: computed(() => {
         const route = routes(this.location) || {};
+        console.log(route);
         switch (route.name) {
           case "about": {
             return {
@@ -53,6 +60,7 @@ export default class ViewStore {
             };
           }
           case "issue": {
+            console.log(route);
             return {
               ...route,
               component: Issue

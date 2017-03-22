@@ -2,6 +2,7 @@ import React from "react";
 import { observer, inject } from "mobx-react";
 import { PENDING, REJECTED, FULFILLED } from "mobx-utils";
 import { Spinner, Button } from "@blueprintjs/core";
+import {issueObject} from "../ui/issue-object";
 export default inject("repoStore", "sessionStore", "viewStore")(
   observer(
     class IssueList extends React.Component {
@@ -10,7 +11,7 @@ export default inject("repoStore", "sessionStore", "viewStore")(
         repoStore.fetchIssues(route.params.repo);
       }
       renderIssueList() {
-        const {sessionStore, repoStore, route} = this.props;
+        const {sessionStore, repoStore, viewStore, route} = this.props;
 
         if (sessionStore.authenticated) {
           const issuesDeferred = repoStore.issuesDeferred;
@@ -46,8 +47,8 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                         <th>Titel</th>
                         <th>Text</th>
                         <th>State</th>
-                        <th>Edit</th>
-                        <th>Close</th>
+                        <th>Edit issue</th>
+                        <th>Close issue</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -59,7 +60,13 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                               <td>{entry.title}</td>
                               <td>{entry.body}</td>
                               <td>{entry.state}</td>
-
+                              <td>
+                                <Button
+                                  className="pt-button pt-minimal pt-icon-edit"
+                                  onClick={() => { issueObject.mode="edit"; issueObject.repo=route.params.repo; issueObject.number=entry.number; issueObject.title=entry.title; issueObject.description=entry.body; viewStore.push(viewStore.routes.issue())}}
+                                  text="edit"
+                                />
+                              </td>
                             </tr>
                         )
                       }
