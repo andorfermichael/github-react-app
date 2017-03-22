@@ -48,7 +48,6 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                         <th>Text</th>
                         <th>State</th>
                         <th>Edit issue</th>
-                        <th>Close issue</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -63,7 +62,7 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                               <td>
                                 <Button
                                   className="pt-button pt-minimal pt-icon-edit"
-                                  onClick={() => { issueObject.mode="edit"; issueObject.repo=route.params.repo; issueObject.number=entry.number; issueObject.title=entry.title; issueObject.body=entry.body; viewStore.push(viewStore.routes.issue())}}
+                                  onClick={() => { issueObject.mode="edit"; issueObject.repo=route.params.repo; issueObject.number=entry.number; issueObject.title=entry.title; issueObject.body=entry.body; issueObject.state=entry.state; viewStore.push(viewStore.routes.issue())}}
                                   text="edit"
                                 />
                               </td>

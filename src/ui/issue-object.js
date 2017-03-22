@@ -4,6 +4,7 @@ let issueObject = {
   number: "",
   title: "",
   body: "",
+  state: ""
 };
 
 export {issueObject};

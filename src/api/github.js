@@ -6,7 +6,7 @@ export default class GithubAPI {
 
     this.api_authentication = '';
     if (CLIENT_ID !== '' && CLIENT_SECRET !== '') {
-      this.api_authentication = `?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
+      this.api_authentication = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
     }
 
     this.defaultHeaders = {
@@ -15,7 +15,7 @@ export default class GithubAPI {
   }
 
   currentUser = () => {
-    return fetch(`https://api.github.com/user${this.api_authentication}`, {
+    return fetch(`https://api.github.com/user?${this.api_authentication}`, {
       headers: {
         ...this.defaultHeaders
       }
@@ -29,7 +29,7 @@ export default class GithubAPI {
   };
 
   userRepositories = ({ login }) => {
-    return fetch(`https://api.github.com/users/${login}/repos${this.api_authentication}`, {
+    return fetch(`https://api.github.com/users/${login}/repos?${this.api_authentication}`, {
       headers: {
         ...this.defaultHeaders
       }
@@ -43,7 +43,7 @@ export default class GithubAPI {
   };
 
   repositoryIssues = (login, repo) => {
-    return fetch(`https://api.github.com/repos/${login}/${repo}/issues${this.api_authentication}`, {
+    return fetch(`https://api.github.com/repos/${login}/${repo}/issues?state=all&${this.api_authentication}`, {
       headers: {
         ...this.defaultHeaders
       }
@@ -59,9 +59,9 @@ export default class GithubAPI {
   postIssue = ({ login, issueobject}) => {
     let url = "";
     if (issueobject.mode === "open") {
-      url = `https://api.github.com/repos/${login}/${issueobject.repo}/issues${this.api_authentication}`;
+      url = `https://api.github.com/repos/${login}/${issueobject.repo}/issues?${this.api_authentication}`;
     } else if (issueobject.mode === "edit") {
-      url = `https://api.github.com/repos/${login}/${issueobject.repo}/issues/${issueobject.number}${this.api_authentication}`
+      url = `https://api.github.com/repos/${login}/${issueobject.repo}/issues/${issueobject.number}?${this.api_authentication}`
     }
 
     return fetch(url, {
@@ -72,7 +72,8 @@ export default class GithubAPI {
       },
       body: JSON.stringify({
         title: issueobject.title,
-        body: issueobject.body
+        body: issueobject.body,
+        state: issueobject.state
       })
     }).then(response => {
       if (response.ok) {

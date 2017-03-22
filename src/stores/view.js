@@ -59,7 +59,6 @@ export default class ViewStore {
             };
           }
           case "issue": {
-            console.log(route);
             return {
               ...route,
               component: Issue

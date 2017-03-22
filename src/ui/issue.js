@@ -6,8 +6,13 @@ import { fromPromise } from "mobx-utils";
 import { Button, Intent, Toaster, Position } from "@blueprintjs/core";
 import validatorjs from "validatorjs";
 import FormInput from './formInput';
+import FormSelect from './formSelect';
 
 const plugins = { dvr: validatorjs };
+
+const stateOptions = [
+  'open', 'closed'
+];
 
 const fields = [
   {
@@ -21,6 +26,11 @@ const fields = [
     label: "Text",
     placeholder: "Issue Description",
     rules: "required|string|between:5,25"
+  },
+  {
+    name: "state",
+    label: "state",
+    options: stateOptions,
   }
 ];
 
@@ -68,12 +78,14 @@ class IssueForm extends MobxReactForm {
 }
 
 const FormComponent = inject("form")(
-  observer(function({ form, options }) {
+  observer(function({ form, issueobject, handleChange, selectValue }) {
     return (
       <form onSubmit={form.onSubmit}>
 
         <FormInput form={form} field="title" />
         <FormInput form={form} field="text" />
+
+        <FormSelect form={form} field="state" state={selectValue} mode={issueobject.mode} handleChange={handleChange}/>
 
         {form.issuePostDeferred.case({
           pending: () => <Button type="submit" loading={true} text="submit" />,
@@ -114,8 +126,19 @@ export default inject("issueStore")(
 
         this.state = {
           form: new IssueForm({ fields, values }, { plugins, issueobject }, issueStore),
+          issueobject: issueobject
         };
       }
+
+      handleChange = (e) => {
+        let issueobject = this.state.issueobject;
+        issueobject.state = e.target.value;
+
+        this.setState({
+          issueobject: issueobject
+        });
+      };
+
       render() {
         const { form } = this.state;
         const {route} = this.props;
@@ -133,7 +156,7 @@ export default inject("issueStore")(
           <Provider form={form}>
             <div>
             <h3>{headline}</h3>
-            <FormComponent />
+            <FormComponent issueobject={issueobject} handleChange={this.handleChange} selectValue={this.state.issueobject.state}/>
             </div>
           </Provider>
         );
