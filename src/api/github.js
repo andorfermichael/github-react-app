@@ -72,7 +72,7 @@ export default class GithubAPI {
       },
       body: JSON.stringify({
         title: issueobject.title,
-        body: issueobject.description
+        body: issueobject.body
       })
     }).then(response => {
       if (response.ok) {

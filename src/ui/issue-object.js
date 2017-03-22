@@ -3,7 +3,7 @@ let issueObject = {
   repo: "",
   number: "",
   title: "",
-  description: "",
+  body: "",
 };
 
 export {issueObject};

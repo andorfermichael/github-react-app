@@ -39,16 +39,27 @@ class IssueForm extends MobxReactForm {
     const { title, text } = form.values();
     let issueobject = this.options.issueobject;
     issueobject.title = title;
-    issueobject.description = text;
+    issueobject.body = text;
 
     const resultPromise = this.issueStore.postIssue(issueobject);
+
+    let messageSuccess = "";
+    let messageFailed = "";
+    if (issueobject.mode === "open") {
+      messageSuccess = "issue opening successful";
+      messageFailed = "issue opening failed"
+    } else if (issueobject.mode === "edit") {
+      messageSuccess = "issue editing successful";
+      messageFailed = "issue editing failed";
+    }
+
     resultPromise
       .then(() => Toaster.create({ position: Position.TOP }).show({
-        message: "issue posted",
+        message: messageSuccess,
         intent: Intent.SUCCESS
       }))
       .catch(() => Toaster.create({ position: Position.TOP }).show({
-        message: "failed posting issue",
+        message: messageFailed,
         action: { text: "retry", onClick: () => form.submit() },
         intent: Intent.DANGER
       }));
@@ -97,7 +108,7 @@ export default inject("issueStore")(
         if (issueobject.mode === "edit") {
           values = {
             title: issueobject.title,
-            text: issueobject.description
+            text: issueobject.body
           };
         }
 

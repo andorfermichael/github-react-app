@@ -57,7 +57,7 @@ export default inject("repoStore", "sessionStore", "viewStore")(
                             <td>
                               <Button
                                 className="pt-button pt-minimal pt-icon-edit"
-                                onClick={() => {issueObject.mode="open"; issueObject.repo=entry.name; issueObject.number=""; issueObject.title=""; issueObject.description=""; viewStore.push(viewStore.routes.issue())}}
+                                onClick={() => {issueObject.mode="open"; issueObject.repo=entry.name; issueObject.number=""; issueObject.title=""; issueObject.body=""; viewStore.push(viewStore.routes.issue())}}
                                 text="open"
                               />
                             </td>
