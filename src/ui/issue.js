@@ -7,6 +7,7 @@ import { Button, Intent, Toaster, Position } from "@blueprintjs/core";
 import validatorjs from "validatorjs";
 import FormInput from './formInput';
 import FormSelect from './formSelect';
+import FormTextarea from './formTextarea';
 
 const plugins = { dvr: validatorjs };
 
@@ -83,7 +84,7 @@ const FormComponent = inject("form")(
       <form onSubmit={form.onSubmit}>
 
         <FormInput form={form} field="title" />
-        <FormInput form={form} field="text" />
+        <FormTextarea form={form} field="text" />
 
         <FormSelect form={form} field="state" state={selectValue} mode={issueobject.mode} handleChange={handleChange}/>
 
