@@ -39,7 +39,6 @@ export default class ViewStore {
       push: url => history.push(url),
       currentView: computed(() => {
         const route = routes(this.location) || {};
-        console.log(route);
         switch (route.name) {
           case "about": {
             return {

@@ -28,6 +28,7 @@ class IssueForm extends MobxReactForm {
   constructor(fields, options, issueStore) {
     super(fields, options);
     this.issueStore = issueStore;
+    this.options = options;
 
     extendObservable(this, {
       issuePostDeferred: fromPromise(Promise.resolve())
@@ -36,7 +37,11 @@ class IssueForm extends MobxReactForm {
 
   onSuccess(form) {
     const { title, text } = form.values();
-    const resultPromise = this.issueStore.postIssue(this.repo, title, text);
+    let issueobject = this.options.issueobject;
+    issueobject.title = title;
+    issueobject.description = text;
+
+    const resultPromise = this.issueStore.postIssue(issueobject);
     resultPromise
       .then(() => Toaster.create({ position: Position.TOP }).show({
         message: "issue posted",
@@ -52,7 +57,7 @@ class IssueForm extends MobxReactForm {
 }
 
 const FormComponent = inject("form")(
-  observer(function({ form }) {
+  observer(function({ form, options }) {
     return (
       <form onSubmit={form.onSubmit}>
 
@@ -97,7 +102,7 @@ export default inject("issueStore")(
         }
 
         this.state = {
-          form: new IssueForm({ fields, values }, { plugins }, issueStore),
+          form: new IssueForm({ fields, values }, { plugins, issueobject }, issueStore),
         };
       }
       render() {

@@ -56,16 +56,23 @@ export default class GithubAPI {
     });
   };
 
-  postIssue = ({ login, repo, title, text }) => {
-    return fetch(`https://api.github.com/repos/${login}/${repo}/issues${this.api_authentication}`, {
+  postIssue = ({ login, issueobject}) => {
+    let url = "";
+    if (issueobject.mode === "open") {
+      url = `https://api.github.com/repos/${login}/${issueobject.repo}/issues${this.api_authentication}`;
+    } else if (issueobject.mode === "edit") {
+      url = `https://api.github.com/repos/${login}/${issueobject.repo}/issues/${issueobject.number}${this.api_authentication}`
+    }
+
+    return fetch(url, {
       method: "POST",
       headers: {
         ...this.defaultHeaders,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        title: title,
-        body: text
+        title: issueobject.title,
+        body: issueobject.description
       })
     }).then(response => {
       if (response.ok) {
